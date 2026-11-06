@@ -6,13 +6,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Extract project ZIP
-        run: |
-          unzip HUNTER_FUN_WORLD_Test_Project.zip -d project
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -20,15 +17,24 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Build APK
-        uses: android-actions/build-android-app@v3
+      - name: Extract project
+        run: unzip HUNTER_FUN_WORLD_Test_Project.zip -d project
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
         with:
-          project-path: project
-          sub-module: app
-          build-type: debug
+          gradle-version: '8.9'
+
+      - name: Build APK
+        run: |
+          cd project/HUNTER_FUN_WORLD_Test_Project
+          gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: HUNTER-FUN-WORLD-APK
-          path: project/app/build/outputs/apk/debug/*.apk
+          path: project/HUNTER_FUN_WORLD_Test_Project/app/build/outputs/apk/debug/*.apk
