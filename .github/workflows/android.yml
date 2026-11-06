@@ -19,10 +19,12 @@ jobs:
           java-version: '17'
 
       - name: Extract project
-        run: unzip HUNTER_FUN_WORLD_Test_Project.zip -d project
+        run: unzip -q HUNTER_FUN_WORLD_Test_Project.zip -d project
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
 
       - name: Accept Android SDK licenses
         run: yes | sdkmanager --licenses
