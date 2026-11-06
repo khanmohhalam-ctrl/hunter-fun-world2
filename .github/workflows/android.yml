@@ -1,3 +1,4 @@
+
 name: Build HUNTER FUN WORLD APK
 
 on:
@@ -15,13 +16,16 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: '17'
 
       - name: Extract project
         run: unzip HUNTER_FUN_WORLD_Test_Project.zip -d project
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -30,11 +34,13 @@ jobs:
 
       - name: Build APK
         run: |
-          cd project/HUNTER_FUN_WORLD_Test_Project
+          cd project
           gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: HUNTER-FUN-WORLD-APK
-          path: project/HUNTER_FUN_WORLD_Test_Project/app/build/outputs/apk/debug/*.apk
+          path: project/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          
